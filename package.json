@@ -39,5 +39,10 @@
   },
   "devDependencies": {
     "tailwindcss": "^3.2.7"
+  },
+  "jest": {
+    "transformIgnorePatterns": [
+      "node_modules/(?!@axios)/"
+    ]
   }
 }
