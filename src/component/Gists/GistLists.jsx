@@ -7,14 +7,14 @@ const GistLists = ({ gists, username }) => {
   };
 
   return (
-    <div className="mt-5">
+    <div className="mx-10 mt-5">
       <h1 className="text-xl text-center underline">
         The List of Public Gists for <b className="capitalize">{username}</b>
       </h1>
-      <ol>
+      <>
         {gists.map((gist) => {
           return (
-            <li key={gist.id} className="pb-2 my-5 border-b">
+            <div key={gist.id} className="p-2 pb-2 my-5 border-b " data-testid="gistLists">
               <p className="text-lg font-medium capitalize">
                 {gist.description
                   ? gist.description
@@ -44,10 +44,10 @@ const GistLists = ({ gists, username }) => {
                   </span>
                 ))}
               </div>
-            </li>
+            </div>
           );
         })}
-      </ol>
+      </>
     </div>
   );
 };

@@ -1,12 +1,5 @@
 import axios from "axios";
 
-axios.interceptors.response.use(
-  (response) => response,
-  (err) => {
-    return err.response
-  }
-)
-
 export const getUsersGists = async (username) => {
   const response = await axios.get(`https://api.github.com/users/${username}/gists`)
 
