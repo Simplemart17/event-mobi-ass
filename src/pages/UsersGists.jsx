@@ -41,6 +41,7 @@ const UsersGists = () => {
         }
 
       } else {
+        setUsersGists([]);
         setGistNotFound("No public gist found for ");
       }
     }
@@ -66,7 +67,7 @@ const UsersGists = () => {
           onKeyPress={handleKeyPress}
         />
       </div>
-      <div className="px-10">
+      <div className="px-5">
         {isLoading && <p>Searching...</p>}
         {gistNotFound.length ? (
           <p className="mt-5">
