@@ -19,35 +19,44 @@ const UsersGists = () => {
   const validateUsername = /^[A-Za-z0-9]*$/.test(username);
 
   const handleSearch = async () => {
-    setIsLoading(true);
-    if (username.length && validateUsername) {
-      const gist = await getUsersGists(username);
+    try {
+      setIsLoading(true);
+      if (username.length && validateUsername) {
+        const gist = await getUsersGists(username);
 
-      if (gist.status === 200) {
-        const results = await Promise.all(
-          gist.data.map(async (data) => {
-            // fetch users forked gists
-            const resp = await getUsersForkedGists(data.forks_url);
-
-            // get the last three forked gists for the user
-            return { ...data, forks: resp.slice(0, 3) };
-          })
-        );
-
-        if (results.length > 0) {
-          setUsersGists(results);
-        } else {
-          setGistNotFound("No public gist found for ");
+        if (!gist) {
+          setIsLoading(false);
+          return;
         }
 
-      } else {
-        setUsersGists([]);
-        setGistNotFound("No public gist found for ");
+        if (gist.status === 200) {
+          const results = await Promise.all(
+            gist.data.map(async (data) => {
+              // fetch users forked gists
+              const resp = await getUsersForkedGists(data.forks_url);
+
+              // get the last three forked gists for the user
+              return { ...data, forks: resp.slice(0, 3) };
+            })
+          );
+
+          if (results.length > 0) {
+            setUsersGists(results);
+          } else {
+            setGistNotFound("No public gist found for ");
+          }
+        } else {
+          setUsersGists([]);
+          setGistNotFound("No public gist found for ");
+        }
       }
+    } catch (e) {
+      setIsLoading(false);
+      setUser(username);
+      setUsername("");
+      setUsersGists([]);
+      setGistNotFound("No public gist found for ");
     }
-    setIsLoading(false);
-    setUser(username);
-    setUsername("");
   };
 
   const handleKeyPress = (event) => {
@@ -58,7 +67,9 @@ const UsersGists = () => {
 
   return (
     <div className="flex flex-col items-center justify-center">
-      <p className="mt-10 text-2xl font-bold">Enter a username and press enter or click the search icon</p>
+      <p className="mt-10 text-2xl font-bold">
+        Enter a username and press enter or click the search icon
+      </p>
       <div className="w-1/2 mt-5 md:w-1/4">
         <SearchBar
           value={username}
